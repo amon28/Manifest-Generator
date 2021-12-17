@@ -118,7 +118,7 @@ void resourceManifest(string addonName, string author, string version) {
 
 int main()
 {
-    string addonName, author, version = "1.0.0";
+    string addonName, author, version = "1,0,0";
     string line;
     size_t q_idx = 0;
     ifstream myfile;
