@@ -1,0 +1,19 @@
+//Made using manifest generator by Dewdimpple
+{
+    "format_version": 2,
+    "header": {
+        "description": "Made By: amon",
+        "name": "gametest",
+        "uuid": "019707a5-db62-49c7-905e-befd050fdbb2",
+        "version": [1,0,0],
+        "min_engine_version": [ 1, 19, 0 ]
+    },
+    "modules": [
+        {
+            "description": "Made By: amon",
+            "type": "resources",
+            "uuid": "f64c6560-71da-46b5-884a-a7a8cb44a214",
+            "version": [1,0,0]
+        }
+    ]
+}

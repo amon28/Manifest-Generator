@@ -1,0 +1,25 @@
+credits
+{
+    "format_version": 2,
+    "header": {
+        "description": "input0",
+        "name": "input1",
+        "uuid": "input2",
+        "version": [input3],
+        "min_engine_version": [ 1, 19, 0 ]
+    },
+    "modules": [
+        {
+            "description": "input0",
+            "type": "data",
+            "uuid": "input2",
+            "version": [input3]
+        }
+    ],
+    "dependencies": [
+		{
+        "uuid": "inputD",
+        "version": [input3]
+      }
+    ]
+}

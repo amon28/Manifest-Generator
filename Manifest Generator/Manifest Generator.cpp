@@ -3,8 +3,13 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <direct.h>
 
 using namespace std;
+
+string resourceDependency;
+bool gametest = false;
+bool dependency = false;
 
 string generateUUID() {
     UUID uuid;
@@ -23,7 +28,16 @@ void behaviorManifest(string addonName,string author, string version) {
     string output;
     string line;
 
-    myfile.open("template/behavior/manifest.json"); //open file
+    //open file
+    if (!gametest && !dependency) {
+        myfile.open("template/behavior/manifest.json");
+    }else if(gametest && !dependency) {
+        myfile.open("template/behavior/manifestGametest.json");
+    }
+    else {
+        myfile.open("template/behavior/manifestDependency.json");
+    }
+
     if (myfile.is_open())
     {
         while (getline(myfile, line, '\n'))
@@ -53,6 +67,11 @@ void behaviorManifest(string addonName,string author, string version) {
             {
                 line.replace(q_idx, 6, version);
             }
+            q_idx = line.find("inputD");
+            if (std::string::npos != q_idx)
+            {
+                line.replace(q_idx, 6, resourceDependency);
+            }
             output = output + line + "\n";
         }
     }
@@ -61,7 +80,15 @@ void behaviorManifest(string addonName,string author, string version) {
     }
     myfile.close();
 
-    myfile2.open("output/behavior/manifest.json");
+    const string dirName = "output/" + addonName + " behavior";
+    const string scriptsDirName = "output/" + addonName + " behavior" + "/scripts";
+    _mkdir(dirName.c_str());
+    if (gametest) {
+    _mkdir(scriptsDirName.c_str());
+    myfile2.open(scriptsDirName + "/Main.js");
+    myfile2.close();
+    }
+    myfile2.open(dirName + "/manifest.json");
     myfile2 << output;
     myfile2.close();
 }
@@ -94,7 +121,12 @@ void resourceManifest(string addonName, string author, string version) {
                 line.replace(q_idx, 6, addonName);
             }
             q_idx = line.find("input2");
-            if (std::string::npos != q_idx)
+            if (std::string::npos != q_idx && dependency)
+            {
+                line.replace(q_idx, 6, resourceDependency);
+            }
+            q_idx = line.find("input2");
+            if ((std::string::npos != q_idx) && !dependency)
             {
                 line.replace(q_idx, 6, generateUUID());
             }
@@ -111,7 +143,9 @@ void resourceManifest(string addonName, string author, string version) {
     }
     myfile.close();
 
-    myfile2.open("output/resource/manifest.json");
+    const string dirName = "output/" + addonName + " resource";
+    _mkdir(dirName.c_str());
+    myfile2.open(dirName + "/manifest.json");
     myfile2 << output;
     myfile2.close();
 }
@@ -123,7 +157,7 @@ int main()
     size_t q_idx = 0;
     ifstream myfile;
     ofstream myfile2;
-    int choose;
+    int choose,adds;
 
     string output;
 
@@ -134,6 +168,23 @@ int main()
 
     cout << "Manifest Creation:\n[1] Behavior Manifest\n[2] Resource Manifest\n[3] Behavior and Resource Manifest\n";
     cin >> choose;
+
+    if (choose == 1 || choose == 3) {
+        cout << "\nAdditional:\n[1] Gametest\n[2] Dependency\n";
+        cin >> adds;
+        switch (adds) {
+        case 1:
+            gametest = true;
+            break;
+        case 2:
+            resourceDependency = generateUUID();
+            dependency = true;
+            break;
+
+        default:
+            cout << "Invalid Input\n";
+        }
+    }
 
     switch (choose) {
     case 1:
